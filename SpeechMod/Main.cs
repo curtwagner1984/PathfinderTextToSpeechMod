@@ -45,11 +45,11 @@ public static class Main
 
         Logger = modEntry.Logger;
 
-        if (!SetSpeech())
-            return false;
-
         Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
         MenuGUI.UpdateColors();
+
+        if (!SetSpeech())
+            return false;
 
         modEntry.OnToggle = OnToggle;
         modEntry.OnGUI = OnGui;
@@ -82,7 +82,7 @@ public static class Main
         ModConfigurationManager.Instance.GroupedSettings.Add("main", [new PlaybackStop()]);
     }
 
-    private static bool SetAvailableVoices()
+    public static bool SetAvailableVoices()
     {
         var availableVoices = Speech?.GetAvailableVoices();
 
@@ -132,8 +132,14 @@ public static class Main
         return true;
     }
 
-    private static bool SetSpeech()
+    public static bool SetSpeech()
     {
+        if (Settings?.UseRestApi == true)
+        {
+            Speech = new RestSpeech();
+            return true;
+        }
+
         switch (Application.platform)
         {
             case RuntimePlatform.OSXPlayer:

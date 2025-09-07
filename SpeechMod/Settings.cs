@@ -16,6 +16,9 @@ public class Settings : UnityModManager.ModSettings
     public int MaleVolume = 100;
     public int MalePitch = 0;
 
+    public bool UseRestApi = false;
+    public string RestApiUrl = string.Empty;
+
     public bool AutoPlay = false;
     public bool AutoPlayIgnoreVoice = false;
 

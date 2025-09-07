@@ -13,21 +13,45 @@ public static class MenuGUI
 
     public static void OnGui()
     {
-        AddVoiceSelector("Narrator Voice - See nationality below", ref Main.Settings.NarratorVoice, ref m_NarratorPreviewText, ref Main.Settings.NarratorRate, ref Main.Settings.NarratorVolume, ref Main.Settings.NarratorPitch, VoiceType.Narrator);
-
         GUILayout.BeginVertical("", GUI.skin.box);
-
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Use gender specific voices", GUILayout.ExpandWidth(false));
-        Main.Settings.UseGenderSpecificVoices = GUILayout.Toggle(Main.Settings.UseGenderSpecificVoices, "Enabled");
+        GUILayout.Label("Use REST API", GUILayout.ExpandWidth(false));
+        var useRest = GUILayout.Toggle(Main.Settings.UseRestApi, "Enabled");
+        if (useRest != Main.Settings.UseRestApi)
+        {
+            Main.Settings.UseRestApi = useRest;
+            Main.SetSpeech();
+            Main.SetAvailableVoices();
+        }
         GUILayout.EndHorizontal();
 
+        if (Main.Settings.UseRestApi)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("REST API URL", GUILayout.ExpandWidth(false));
+            Main.Settings.RestApiUrl = GUILayout.TextField(Main.Settings.RestApiUrl ?? string.Empty, GUILayout.Width(400f));
+            GUILayout.EndHorizontal();
+        }
         GUILayout.EndVertical();
 
-        if (Main.Settings.UseGenderSpecificVoices)
+        if (!Main.Settings.UseRestApi)
         {
-            AddVoiceSelector("Female Voice - See nationality below", ref Main.Settings.FemaleVoice, ref m_FemalePreviewText, ref Main.Settings.FemaleRate, ref Main.Settings.FemaleVolume, ref Main.Settings.FemalePitch, VoiceType.Female);
-            AddVoiceSelector("Male Voice - See nationality below", ref Main.Settings.MaleVoice, ref m_MalePreviewText, ref Main.Settings.MaleRate, ref Main.Settings.MaleVolume, ref Main.Settings.MalePitch, VoiceType.Male);
+            AddVoiceSelector("Narrator Voice - See nationality below", ref Main.Settings.NarratorVoice, ref m_NarratorPreviewText, ref Main.Settings.NarratorRate, ref Main.Settings.NarratorVolume, ref Main.Settings.NarratorPitch, VoiceType.Narrator);
+
+            GUILayout.BeginVertical("", GUI.skin.box);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Use gender specific voices", GUILayout.ExpandWidth(false));
+            Main.Settings.UseGenderSpecificVoices = GUILayout.Toggle(Main.Settings.UseGenderSpecificVoices, "Enabled");
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+
+            if (Main.Settings.UseGenderSpecificVoices)
+            {
+                AddVoiceSelector("Female Voice - See nationality below", ref Main.Settings.FemaleVoice, ref m_FemalePreviewText, ref Main.Settings.FemaleRate, ref Main.Settings.FemaleVolume, ref Main.Settings.FemalePitch, VoiceType.Female);
+                AddVoiceSelector("Male Voice - See nationality below", ref Main.Settings.MaleVoice, ref m_MalePreviewText, ref Main.Settings.MaleRate, ref Main.Settings.MaleVolume, ref Main.Settings.MalePitch, VoiceType.Male);
+            }
         }
 
         GUILayout.BeginVertical("", GUI.skin.box);
